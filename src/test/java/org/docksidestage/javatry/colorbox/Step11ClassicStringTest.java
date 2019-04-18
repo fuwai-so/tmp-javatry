@@ -15,10 +15,12 @@
  */
 package org.docksidestage.javatry.colorbox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.docksidestage.bizfw.colorbox.ColorBox;
 import org.docksidestage.bizfw.colorbox.color.BoxColor;
+import org.docksidestage.bizfw.colorbox.space.BoxSpace;
 import org.docksidestage.javatry.colorbox.base.YourPrivateRoom;
 import org.docksidestage.unit.PlainTestCase;
 
@@ -51,6 +53,22 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスに入ってる文字列の中で、一番長い文字列は？)
      */
     public void test_length_findMax() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String maxStr = null;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof String) { // if the content is String type
+                    String strContent = (String) content;
+                    int currentLength = strContent.length();
+                    if (maxStr == null || maxStr.length() < currentLength) {
+                        maxStr = strContent;
+                    }
+                }
+            }
+        }
+        log(maxStr != null ? maxStr : "*Not found string content");
     }
 
     /**
@@ -58,6 +76,31 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスに入ってる文字列の中で、一番長いものと短いものの差は何文字？)
      */
     public void test_length_findMaxMinDiff() {
+//        List<ColorBox> colorBoxList = new ArrayList<>();
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        log(colorBoxList);
+        String maxStr = null;
+        String minStr = null;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof String) { // if the content is String type
+                    String strContent = (String) content;
+                    int currentLength = strContent.length();
+                    if (maxStr == null || maxStr.length() < currentLength) {
+                        maxStr = strContent;
+                    }
+                    if (minStr == null || minStr.length() > currentLength) {
+                        minStr = strContent;
+                    }
+                }
+            }
+        }
+
+        int different = maxStr.length() - minStr.length();
+
+        log(different);
     }
 
     /**
@@ -65,6 +108,38 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスに入ってる値 (文字列以外はtoString()) の中で、二番目に長い文字列は？ (ソートなしで))
      */
     public void test_length_findSecondMax() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String foo = null;
+        String bar = null;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof String) { // if the content is String type
+                    String strContent = (String) content;
+                    int currentLength = strContent.length();
+
+                    if (foo == null || bar == null) {
+                        if (foo == null) {
+                            foo = strContent;
+                        } else {
+                            bar = strContent;
+                        }
+                        continue;
+                    }
+
+                    if (foo.length() <= currentLength || bar.length() <= currentLength) {
+                        if (foo.length() >= bar.length()) {
+                            bar = strContent;
+                        } else {
+                            foo = strContent;
+                        }
+                    }
+                }
+            }
+        }
+
+        log(foo.length() < bar.length() ? foo : bar);
     }
 
     /**
