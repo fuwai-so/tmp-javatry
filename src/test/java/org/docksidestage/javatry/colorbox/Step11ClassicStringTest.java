@@ -117,17 +117,17 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 Object content = space.getContent();
                 if (content instanceof String) { // if the content is String type
                     String strContent = (String) content;
-                    int currentLength = strContent.length();
 
-                    if (foo == null || bar == null) {
-                        if (foo == null) {
-                            foo = strContent;
-                        } else {
-                            bar = strContent;
-                        }
+                    if (foo == null) {
+                        foo = strContent;
+                        continue;
+                    }
+                    if (bar == null) {
+                        bar = strContent;
                         continue;
                     }
 
+                    int currentLength = strContent.length();
                     if (foo.length() <= currentLength || bar.length() <= currentLength) {
                         if (foo.length() >= bar.length()) {
                             bar = strContent;
