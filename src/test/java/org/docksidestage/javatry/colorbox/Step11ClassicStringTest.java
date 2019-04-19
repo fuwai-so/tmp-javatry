@@ -17,6 +17,7 @@ package org.docksidestage.javatry.colorbox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.docksidestage.bizfw.colorbox.ColorBox;
 import org.docksidestage.bizfw.colorbox.color.BoxColor;
@@ -167,6 +168,24 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスの中で、色の名前が一番長いものは？)
      */
     public void test_length_findMaxColorSize() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String maxStr = null;
+        String strongestColor = null;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof String) { // if the content is String type
+                    String strContent = (String) content;
+                    int currentLength = strContent.length();
+                    if (maxStr == null || maxStr.length() < currentLength) {
+                        maxStr = strContent;
+                        strongestColor = colorBox.getColor().getColorName();
+                    }
+                }
+            }
+        }
+        log(strongestColor);
     }
 
     // ===================================================================================
@@ -177,6 +196,21 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * ("Water" で始まる文字列をしまっているカラーボックスの色は？)
      */
     public void test_startsWith_findFirstWord() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String targetedColor = null;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof String) { // if the content is String type
+                    String strContent = (String) content;
+                    if (Pattern.matches("^Water.*", strContent)) {
+                        targetedColor = colorBox.getColor().getColorName();
+                    }
+                }
+            }
+        }
+        log(targetedColor);
     }
 
     /**
@@ -184,6 +218,21 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * ("front" で終わる文字列をしまっているカラーボックスの色は？)
      */
     public void test_endsWith_findLastWord() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String targetedColor = null;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof String) { // if the content is String type
+                    String strContent = (String) content;
+                    if (Pattern.matches(".*front$", strContent)) {
+                        targetedColor = colorBox.getColor().getColorName();
+                    }
+                }
+            }
+        }
+        log(targetedColor);
     }
 
     // ===================================================================================
