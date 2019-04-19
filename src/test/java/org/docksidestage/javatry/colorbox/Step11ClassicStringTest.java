@@ -147,6 +147,19 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスに入ってる文字列の長さの合計は？)
      */
     public void test_length_calculateLengthSum() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String stringAddUp = null;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof String) { // if the content is String type
+                    String strContent = (String) content;
+                    stringAddUp += strContent;
+                }
+            }
+        }
+        log(stringAddUp.length());
     }
 
     /**
