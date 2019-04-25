@@ -277,7 +277,7 @@ public class Step11ClassicStringTest extends PlainTestCase {
         if (startingIndex == -1) {
             log("Index not found");
         } else {
-            log(startingIndex+1);   
+            log(startingIndex+1);
         }
     }
 
@@ -289,6 +289,21 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスに入ってる "front" で終わる文字列の最初の一文字は？)
      */
     public void test_substring_findFirstChar() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        char firstChar = 0;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof String) { // if the content is String type
+                    String strContent = (String) content;
+                    if (strContent.endsWith("front")) { // The latest content which ends with "Water" will be selected
+                        firstChar = strContent.charAt(0);
+                    }
+                }
+            }
+        }
+        log(firstChar);
     }
 
     /**
