@@ -110,37 +110,27 @@ public class Step11ClassicStringTest extends PlainTestCase {
      */
     public void test_length_findSecondMax() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        String foo = null;
-        String bar = null;
+        String maxStr = null;
+        String secondMaxStr = null;
         for (ColorBox colorBox : colorBoxList) {
             List<BoxSpace> spaceList = colorBox.getSpaceList();
             for (BoxSpace space : spaceList) {
                 Object content = space.getContent();
                 if (content instanceof String) { // if the content is String type
                     String strContent = (String) content;
-
-                    if (foo == null) {
-                        foo = strContent;
-                        continue;
-                    }
-                    if (bar == null) {
-                        bar = strContent;
-                        continue;
-                    }
-
                     int currentLength = strContent.length();
-                    if (foo.length() <= currentLength || bar.length() <= currentLength) {
-                        if (foo.length() >= bar.length()) {
-                            bar = strContent;
-                        } else {
-                            foo = strContent;
-                        }
+
+                    if (maxStr == null || maxStr.length() < currentLength) {
+                        secondMaxStr = maxStr;
+                        maxStr = strContent;
+                    } else if (secondMaxStr == null || secondMaxStr.length() < currentLength) {
+                        secondMaxStr = strContent;
                     }
                 }
             }
         }
 
-        log(foo.length() < bar.length() ? foo : bar);
+        log(secondMaxStr);
     }
 
     /**
@@ -311,6 +301,21 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスに入ってる "Water" で始まる文字列の最後の一文字は？)
      */
     public void test_substring_findLastChar() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        char lastChar = 0;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof String) { // if the content is String type
+                    String strContent = (String) content;
+                    if (strContent.startsWith("Water")) { // The latest content which ends with "Water" will be selected
+                        lastChar = strContent.charAt(strContent.length() - 1);
+                    }
+                }
+            }
+        }
+        log(lastChar);
     }
 
     // ===================================================================================
@@ -321,6 +326,21 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスに入ってる "o" (おー) を含んだ文字列から "o" を全て除去したら何文字？)
      */
     public void test_replace_remove_o() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String replacedString = null;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof String) { // if the content is String type
+                    String strContent = (String) content;
+                    if (strContent.contains("o")) {
+                        replacedString = strContent.replaceAll("o","");
+                    }
+                }
+            }
+        }
+        log(replacedString);
     }
 
     /**
@@ -328,6 +348,7 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * カラーボックスに入ってる java.io.File のパス文字列のファイルセパレーターの "/" を、Windowsのファイルセパレーターに置き換えた文字列は？
      */
     public void test_replace_fileseparator() {
+
     }
 
     // ===================================================================================
@@ -338,6 +359,25 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスの中に入っているDevilBoxクラスのtextの長さの合計は？)
      */
     public void test_welcomeToDevil() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        int totalLength = 0;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof YourPrivateRoom.DevilBox) { // if the content is DevilBox
+                    ((YourPrivateRoom.DevilBox) content).wakeUp();
+                    ((YourPrivateRoom.DevilBox) content).allowMe();
+                    ((YourPrivateRoom.DevilBox) content).open();
+                    try {
+                        totalLength += ((YourPrivateRoom.DevilBox) content).getText().length();
+                    } catch (Exception e) {
+                        log("Exception found");
+                    }
+                }
+            }
+        }
+        log(totalLength);
     }
 
     // ===================================================================================
