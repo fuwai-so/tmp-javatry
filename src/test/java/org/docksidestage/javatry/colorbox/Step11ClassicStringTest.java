@@ -16,7 +16,9 @@
 package org.docksidestage.javatry.colorbox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.docksidestage.bizfw.colorbox.ColorBox;
@@ -29,7 +31,7 @@ import org.docksidestage.unit.PlainTestCase;
  * The test of String with color-box, not using Stream API. <br>
  * Show answer by log() for question of javadoc.
  * @author jflute
- * @author your_name_here
+ * @author fuwai_so
  */
 public class Step11ClassicStringTest extends PlainTestCase {
 
@@ -178,20 +180,23 @@ public class Step11ClassicStringTest extends PlainTestCase {
      */
     public void test_startsWith_findFirstWord() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        String targetedColor = null;
+        List<String> targetedColorList = new ArrayList<>();
         for (ColorBox colorBox : colorBoxList) {
             List<BoxSpace> spaceList = colorBox.getSpaceList();
             for (BoxSpace space : spaceList) {
                 Object content = space.getContent();
                 if (content instanceof String) { // if the content is String type
                     String strContent = (String) content;
-                    if (strContent.startsWith("Water")) { // The latest content which starts with "Water" will be selected
-                        targetedColor = colorBox.getColor().getColorName();
+                    if (strContent.startsWith("Water")) {
+                        targetedColorList.add(colorBox.getColor().getColorName());
+                        break;
                     }
                 }
             }
         }
-        log(targetedColor);
+        for (String color : targetedColorList) {
+            log(color);
+        }
     }
 
     /**
@@ -200,20 +205,22 @@ public class Step11ClassicStringTest extends PlainTestCase {
      */
     public void test_endsWith_findLastWord() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        String targetedColor = null;
+        List<String> targetedColorList = new ArrayList<>();
         for (ColorBox colorBox : colorBoxList) {
             List<BoxSpace> spaceList = colorBox.getSpaceList();
             for (BoxSpace space : spaceList) {
                 Object content = space.getContent();
                 if (content instanceof String) { // if the content is String type
                     String strContent = (String) content;
-                    if (strContent.endsWith("front")) { // The latest content which ends with "Water" will be selected
-                        targetedColor = colorBox.getColor().getColorName();
+                    if (strContent.endsWith("front")) {
+                        targetedColorList.add(colorBox.getColor().getColorName());
                     }
                 }
             }
         }
-        log(targetedColor);
+        for (String color : targetedColorList) {
+            log(color);
+        }
     }
 
     // ===================================================================================
@@ -258,7 +265,7 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 Object content = space.getContent();
                 if (content instanceof String) { // if the content is String type
                     String strContent = (String) content;
-                    if (strContent.contains("ど")) {
+                    if (strContent.contains("ど") && strContent.indexOf("ど") != strContent.lastIndexOf("ど")) {
                         startingIndex = strContent.lastIndexOf("ど");
                     }
                 }
@@ -335,7 +342,7 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 if (content instanceof String) { // if the content is String type
                     String strContent = (String) content;
                     if (strContent.contains("o")) {
-                        replacedString = strContent.replaceAll("o","");
+                        replacedString = strContent.replace("o","");
                     }
                 }
             }
@@ -388,6 +395,16 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスの中に入っている java.util.Map を "map:{ key = value ; key = value ; ... }" という形式で表示すると？)
      */
     public void test_showMap() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof java.util.Map) {
+                    log(content.toString());
+                }
+            }
+        }
     }
 
     /**
@@ -395,6 +412,25 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (whiteのカラーボックスのupperスペースに入っているSecretBoxクラスのtextをMapに変換してtoString()すると？)
      */
     public void test_parseMap_basic() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        for (ColorBox colorBox : colorBoxList) {
+            if(!colorBox.getColor().getColorName().equals("white")) {
+                continue;
+            }
+            BoxSpace upperSpace = colorBox.getSpaceList().get(0);
+            String content = ((YourPrivateRoom.SecretBox) upperSpace.getContent()).getText();
+            content = content.substring(content.indexOf("{")+1);
+            content = content.replace("}", "");
+
+            String[] mapPair =  content.split(";");
+            Map<String,String> map = new HashMap<>();
+            for(String pair : mapPair) {
+                String[] entry = pair.split("=");
+                //log(entry);
+                map.put(entry[0].trim(), entry[1].trim());
+            }
+            log(map.toString());
+        }
     }
 
     /**
