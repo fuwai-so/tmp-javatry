@@ -15,6 +15,7 @@
  */
 package org.docksidestage.javatry.colorbox;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,12 @@ import org.docksidestage.unit.PlainTestCase;
 
 /**
  * The test of String with color-box, not using Stream API. <br>
- * Show answer by log() for question of javadoc.
+ * Show answer by log() for question of javadoc. <br>
+ * <pre>
+ * addition:
+ * o e.g. "string in color-boxes" means String-type content in space of color-box
+ * o don't fix the YourPrivateRoom class and color-box classes
+ * </pre>
  * @author jflute
  * @author fuwai_so
  */
@@ -56,6 +62,13 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスに入ってる文字列の中で、一番長い文字列は？)
      */
     public void test_length_findMax() {
+//        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+//        colorBoxList.stream()
+//                .flatMap(box -> box.getSpaceList().stream())
+//                .map(space -> space.getContent())
+//                .filter(content -> content instanceof String)
+//                .map(content -> ((String) content).length())
+//                .map(comparator);
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
         String maxStr = null;
         for (ColorBox colorBox : colorBoxList) {
@@ -253,8 +266,8 @@ public class Step11ClassicStringTest extends PlainTestCase {
     }
 
     /**
-     * What number character is starting with the late "ど" of string containing plural "ど"s in color-boxes? <br>
-     * (あなたのカラーボックスに入ってる「ど」を二つ以上含む文字列で、最後の「ど」は何文字目から始まる？)
+     * What number character is starting with the late "ど" of string containing plural "ど"s in color-boxes? (e.g. "どんどん" => 3) <br>
+     * (あなたのカラーボックスに入ってる「ど」を二つ以上含む文字列で、最後の「ど」は何文字目から始まる？ (e.g. "どんどん" => 3))
      */
     public void test_lastIndexOf_findIndex() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
@@ -355,7 +368,19 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * カラーボックスに入ってる java.io.File のパス文字列のファイルセパレーターの "/" を、Windowsのファイルセパレーターに置き換えた文字列は？
      */
     public void test_replace_fileseparator() {
-
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String replacedPath = null;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof File) { // if the content is String type
+                    String FilePath = ((File) content).getPath();
+                    replacedPath = FilePath.replace("/","\\");
+                }
+            }
+        }
+        log(replacedPath);
     }
 
     // ===================================================================================
@@ -388,13 +413,36 @@ public class Step11ClassicStringTest extends PlainTestCase {
     }
 
     // ===================================================================================
-    //                                                                           Good Luck
+    //                                                                           Challenge
     //                                                                           =========
     /**
      * What string is converted to style "map:{ key = value ; key = value ; ... }" from java.util.Map in color-boxes? <br>
      * (カラーボックスの中に入っている java.util.Map を "map:{ key = value ; key = value ; ... }" という形式で表示すると？)
      */
-    public void test_showMap() {
+    public void test_showMap_flat() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            outerLoop:
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof java.util.Map) {
+                    for (Object value : ((Map) content).values()) {
+                        if(value instanceof java.util.Map) {
+                            continue outerLoop;
+                        }
+                    }
+                    log("map:"+content.toString().replace(",",";"));
+                }
+            }
+        }
+    }
+
+    /**
+     * What string is converted to style "map:{ key = value ; key = map:{ key = value ; ... } ; ... }" from java.util.Map in color-boxes? <br>
+     * (カラーボックスの中に入っている java.util.Map を "map:{ key = value ; key = map:{ key = value ; ... } ; ... }" という形式で表示すると？)
+     */
+    public void test_showMap_nested() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
         for (ColorBox colorBox : colorBoxList) {
             List<BoxSpace> spaceList = colorBox.getSpaceList();
@@ -407,11 +455,14 @@ public class Step11ClassicStringTest extends PlainTestCase {
         }
     }
 
+    // ===================================================================================
+    //                                                                           Good Luck
+    //                                                                           =========
     /**
      * What string of toString() is converted from text of SecretBox class in upper space on the "white" color-box to java.util.Map? <br>
      * (whiteのカラーボックスのupperスペースに入っているSecretBoxクラスのtextをMapに変換してtoString()すると？)
      */
-    public void test_parseMap_basic() {
+    public void test_parseMap_flat() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
         for (ColorBox colorBox : colorBoxList) {
             if(!colorBox.getColor().getColorName().equals("white")) {
@@ -426,7 +477,6 @@ public class Step11ClassicStringTest extends PlainTestCase {
             Map<String,String> map = new HashMap<>();
             for(String pair : mapPair) {
                 String[] entry = pair.split("=");
-                //log(entry);
                 map.put(entry[0].trim(), entry[1].trim());
             }
             log(map.toString());
@@ -437,6 +487,32 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * What string of toString() is converted from text of SecretBox class in both middle and lower spaces on the "white" color-box to java.util.Map? <br>
      * (whiteのカラーボックスのmiddleおよびlowerスペースに入っているSecretBoxクラスのtextをMapに変換してtoString()すると？)
      */
-    public void test_parseMap_deep() {
+    public void test_parseMap_nested() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        for (ColorBox colorBox : colorBoxList) {
+            if(!colorBox.getColor().getColorName().equals("white")) {
+                continue;
+            }
+            BoxSpace upperSpace = colorBox.getSpaceList().get(1);
+            String content = ((YourPrivateRoom.SecretBox) upperSpace.getContent()).getText();
+            log(stringToMap(content).toString());
+        }
+    }
+
+    public Map stringToMap(String input) {
+        input = input.substring(input.indexOf("{")+1);
+        input = input.replace("}", "");
+
+        String[] mapPair =  input.split(";");
+        Map<String,String> map = new HashMap<>();
+        for(String pair : mapPair) {
+            String[] entry = pair.split("=");
+            if (entry[1].contains("{")) {
+                log(entry[1]);
+                entry[1] = stringToMap(entry[1]).toString();
+            }
+            map.put(entry[0].trim(), entry[1].trim());
+        }
+        return map;
     }
 }
