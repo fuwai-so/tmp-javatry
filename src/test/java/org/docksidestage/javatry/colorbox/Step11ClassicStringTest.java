@@ -169,23 +169,14 @@ public class Step11ClassicStringTest extends PlainTestCase {
      */
     public void test_length_findMaxColorSize() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        String maxStr = null;
-        String strongestColor = null;
+        String longestColor = null;
         for (ColorBox colorBox : colorBoxList) {
-            List<BoxSpace> spaceList = colorBox.getSpaceList();
-            for (BoxSpace space : spaceList) {
-                Object content = space.getContent();
-                if (content instanceof String) { // if the content is String type
-                    String strContent = (String) content;
-                    int currentLength = strContent.length();
-                    if (maxStr == null || maxStr.length() < currentLength) {
-                        maxStr = strContent;
-                        strongestColor = colorBox.getColor().getColorName();
-                    }
-                }
+            String currentColor = colorBox.getColor().getColorName();
+            if (longestColor == null || longestColor.length() < currentColor.length()) {
+                longestColor = currentColor;
             }
         }
-        log(strongestColor);
+        log(longestColor);
     }
 
     // ===================================================================================
@@ -204,7 +195,7 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 Object content = space.getContent();
                 if (content instanceof String) { // if the content is String type
                     String strContent = (String) content;
-                    if (Pattern.matches("^Water.*", strContent)) {
+                    if (strContent.startsWith("Water")) { // The latest content which starts with "Water" will be selected
                         targetedColor = colorBox.getColor().getColorName();
                     }
                 }
@@ -226,7 +217,7 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 Object content = space.getContent();
                 if (content instanceof String) { // if the content is String type
                     String strContent = (String) content;
-                    if (Pattern.matches(".*front$", strContent)) {
+                    if (strContent.endsWith("front")) { // The latest content which ends with "Water" will be selected
                         targetedColor = colorBox.getColor().getColorName();
                     }
                 }
@@ -243,6 +234,21 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (あなたのカラーボックスに入ってる "front" で終わる文字列で、"front" は何文字目から始まる？)
      */
     public void test_indexOf_findIndex() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        int startingIndex = -1;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof String) { // if the content is String type
+                    String strContent = (String) content;
+                    if (strContent.endsWith("front")) { // The latest content which ends with "Water" will be selected
+                        startingIndex = strContent.indexOf("front");
+                    }
+                }
+            }
+        }
+        log(startingIndex+1);
     }
 
     /**
@@ -250,6 +256,21 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (あなたのカラーボックスに入ってる「ど」を二つ以上含む文字列で、最後の「ど」は何文字目から始まる？)
      */
     public void test_lastIndexOf_findIndex() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        int startingIndex = -1;
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace space : spaceList) {
+                Object content = space.getContent();
+                if (content instanceof String) { // if the content is String type
+                    String strContent = (String) content;
+                    if (strContent.contains("ど")) {
+                        startingIndex = strContent.lastIndexOf("ど");
+                    }
+                }
+            }
+        }
+        log(startingIndex+1);
     }
 
     // ===================================================================================
