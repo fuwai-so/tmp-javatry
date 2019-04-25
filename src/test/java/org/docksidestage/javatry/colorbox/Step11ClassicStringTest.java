@@ -248,7 +248,11 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 }
             }
         }
-        log(startingIndex+1);
+        if (startingIndex == -1) {
+            log("Index not found");
+        } else {
+            log(startingIndex+1);
+        }
     }
 
     /**
@@ -270,7 +274,11 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 }
             }
         }
-        log(startingIndex+1);
+        if (startingIndex == -1) {
+            log("Index not found");
+        } else {
+            log(startingIndex+1);   
+        }
     }
 
     // ===================================================================================
